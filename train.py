@@ -205,7 +205,7 @@ print("Exporting Random Forest classifier...")
 pickle.dump(rfc, open('rfc.pickle', 'wb'))
 
 # Prepare and export the test set
-test_df = pd.concat([test_corpus, test_labels], axis=1)
+test_df = pd.DataFrame(features_tfidf, columns=feature_names)
 print("Exporting test set...")
 pd.to_csv(test_df, file='test_data.tsv', sep='\t', index=False)
 
