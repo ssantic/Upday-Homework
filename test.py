@@ -27,7 +27,7 @@ parser.add_argument('model', type=str, help='Input pickled model for scoring.')
 args = parser.parse_args()
 
 # Import the model
-rfc = pickle.loads(args.model)
+rfc = pickle.load(open(args.model, 'rb'))
 
 # Load the dataset for testing
 test_df = pd.read_csv(args.test_file, sep='\t')
