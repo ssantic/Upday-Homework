@@ -207,7 +207,7 @@ pickle.dump(rfc, open('rfc.pickle', 'wb'))
 # Prepare and export the test set
 test_df = pd.DataFrame(features_tfidf, columns=feature_names)
 print("Exporting test set...")
-test_df.to_csv(file='test_data.tsv', sep='\t', index=False)
+test_df.to_csv('test_data.tsv', sep='\t', index=False)
 
 # Finish and exit the script
 print("Done!")
