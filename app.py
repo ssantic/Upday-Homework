@@ -4,7 +4,7 @@
 Author: Srdjan Santic
 Date: 18-Feb-2020
 
-This script runs a simple Flask server, listening by default on port 5050.
+This script runs a simple Flask server, listening by default on port 5000.
 It requires a pickled model, receives requests in JSON format, and outputs
 predictions.
 
