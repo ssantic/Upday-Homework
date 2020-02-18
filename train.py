@@ -177,7 +177,7 @@ features_tfidf = np.round(features, 2)
 
 # Fit the Random Forest classifier
 print("Training the Random Forest classifier...")
-rfc = RandomForestClassifier(random_state=176, n_estimators=1000).fit(features, train_labels)
+rfc = RandomForestClassifier(random_state=176, n_estimators=100).fit(features, train_labels)
 
 # Export the model as a pickle file
 print("Exporting Random Forest classifier...")
