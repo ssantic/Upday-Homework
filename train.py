@@ -1,6 +1,5 @@
-import nltk
 import re
-import string
+import pickle
 import spacy
 import unicodedata
 import pandas as pd
@@ -15,18 +14,20 @@ from nltk.tokenize.toktok import ToktokTokenizer
 # Prepare the functionality of NLP libraries for use
 nlp = spacy.load('en', parse=True, tag=True, entity=True)
 tokenizer = ToktokTokenizer()
-stopword_list = nltk.corpus.stopwords.words('english')
+stopword_list = stopwords.words('english')
 stopword_list.remove('no')
 stopword_list.remove('not')
 
 # Load in the original dataset
 df = pd.read_csv("C:/Upday-Homework/data_redacted.tsv", sep="\t")
 
+
 # Function for removal of accented characters
 def remove_accented_chars(text):
     print("Removing accented characters...")
     text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore')
     return text
+
 
 # Function for expanding contractions
 def expand_contractions(text):
@@ -48,6 +49,7 @@ def expand_contractions(text):
 
     return expanded_text
 
+
 # Define function for removing special characters
 def remove_special_characters(text, remove_digits=True):
     print("Removing special characters...")
@@ -55,6 +57,7 @@ def remove_special_characters(text, remove_digits=True):
     pattern = r'[^a-zA-z0-9\s]' if not remove_digits else r'[^a-zA-z\s]'
     text = re.sub(pattern, '', text)
     return text
+
 
 # Define function for removing stopwords
 def remove_stopwords(text, is_lower_case=False):
@@ -69,6 +72,7 @@ def remove_stopwords(text, is_lower_case=False):
 
     filtered_text = ' '.join(filtered_tokens)
     return filtered_text
+
 
 # Define function for text lemmatization
 def lemmatize_text(text):
@@ -126,6 +130,7 @@ def normalize_corpus(corpus, contraction_expansion=True,
 
     return normalized_corpus
 
+
 # Combine the title and the article text
 df['full_text'] = df['text'].map(str) + '. ' + df['title']
 
@@ -135,6 +140,7 @@ norm_corpus = list(df['clean_text'])
 
 # Prepare the data frame for modeling
 modeling_df = df.drop(['title', 'text', 'url', 'full_text'], axis=1)
+
 
 # Define function to directly compute the TF-IDF-based feature vectors for documents from the raw documents
 def tfidf_extractor(corpus, ngram_range=(1, 1)):
@@ -147,5 +153,38 @@ def tfidf_extractor(corpus, ngram_range=(1, 1)):
     features = vectorizer.fit_transform(corpus)
     return vectorizer, features
 
-# Split the data into training and testing set
 
+# Split the data into training and testing set
+print("Splitting data into train and test...")
+X = modeling_df['clean_text']
+Y = modeling_df['category']
+
+train_X, test_X, train_Y, test_Y = train_test_split(X, Y, test_size=0.3, random_state=42, stratify=Y)
+
+train_corpus, test_corpus = train_X.values.astype('U'), test_X.values.astype('U')
+train_labels, test_labels = train_Y, test_Y
+
+# Build the TF-IDF features
+feature_set = []
+tfidf_vectorizer, tfidf_train_features = tfidf_extractor(train_corpus)
+tfidf_test_features = tfidf_vectorizer.transform(test_corpus)
+feature_set.append(('TF-IDF Features', tfidf_train_features, tfidf_test_features))
+feature_names = tfidf_vectorizer.get_feature_names()
+features = tfidf_train_features.todense()
+features_tfidf = np.round(features, 2)
+
+# Fit the Random Forest classifier
+print("Training the Random Forest classifier...")
+rfc = RandomForestClassifier(random_state=176, n_estimators=1000).fit(features, train_labels)
+
+# Export the model as a pickle file
+print("Exporting Random Forest classifier...")
+pickle.dump(rfc, open('rfc.pickle', 'wb'))
+
+# Prepare and export the test set
+test_df = pd.concat([test_corpus, test_labels], axis=1)
+print("Exporting test set...")
+pd.to_csv(test_df, file='test_data.tsv', sep='\t', index=False)
+
+# Finish and exit the script
+print("Done!")
