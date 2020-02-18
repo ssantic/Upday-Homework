@@ -1,3 +1,20 @@
+#!/usr/bin/env python
+
+"""
+Author: Srdjan Santic
+Date: 18-Feb-2020
+
+This script is used for evaluating an already trained model on the test data,
+both provided by the train.py script. It loads the pickled model, and outputs
+a number of accuracy metrics for the model.
+
+The correct usage of the script is:
+
+$ python test.py model_file.pickle test_data_file.tsv
+
+"""
+
+
 import argparse
 import pickle
 import pandas as pd
