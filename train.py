@@ -211,7 +211,7 @@ test_labels_df.rename(columns={'category': 'CATEGORY'}, inplace=True)
 print("Exporting test set features...")
 features_df.to_csv('test_features.tsv', sep='\t', index=False)
 print("Exporting test set labels...")
-test_labels_df.to_csv('test_labels.tsv')
+test_labels_df.to_csv('test_labels.tsv', index=False)
 
 # Finish and exit the script
 print("Done!")
