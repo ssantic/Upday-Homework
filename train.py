@@ -206,9 +206,12 @@ pickle.dump(rfc, open('rfc.pickle', 'wb'))
 
 # Prepare and export the test set
 features_df = pd.DataFrame(tfidf_test_features.todense(), columns=feature_names)
-test_df = pd.concat([features_df, test_labels], axis=1)
-print("Exporting test set...")
-test_df.to_csv('test_data.tsv', sep='\t', index=False)
+test_labels_df = pd.DataFrame(test_labels)
+test_labels_df.rename(columns={'category': 'CATEGORY'}, inplace=True)
+print("Exporting test set features...")
+features_df.to_csv('test_features.tsv', sep='\t', index=False)
+print("Exporting test set labels...")
+test_labels_df.to_csv('test_labels.tsv')
 
 # Finish and exit the script
 print("Done!")
