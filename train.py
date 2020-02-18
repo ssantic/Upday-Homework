@@ -36,7 +36,7 @@ from nltk.tokenize.toktok import ToktokTokenizer
 # Prepare the argument parser
 parser = argparse.ArgumentParser(description='Script for training a Random Forest classifier.')
 parser.add_argument('data_file', type=str, help='Input TSV data file.')
-
+args = parser.parse_args()
 
 # Prepare the functionality of NLP libraries for use
 nlp = spacy.load('en', parse=True, tag=True, entity=True)
@@ -47,7 +47,7 @@ stopword_list.remove('not')
 
 # Load in the original dataset
 print("Loading dataset...")
-df = pd.read_csv(parser.data_file, sep="\t")
+df = pd.read_csv(args.data_file, sep="\t")
 
 
 # Function for removal of accented characters
