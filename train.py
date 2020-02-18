@@ -3,6 +3,7 @@ import pickle
 import spacy
 import unicodedata
 import pandas as pd
+import numpy as np
 from contractions import CONTRACTION_MAP
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -19,19 +20,18 @@ stopword_list.remove('no')
 stopword_list.remove('not')
 
 # Load in the original dataset
+print("Loading dataset...")
 df = pd.read_csv("C:/Upday-Homework/data_redacted.tsv", sep="\t")
 
 
 # Function for removal of accented characters
 def remove_accented_chars(text):
-    print("Removing accented characters...")
     text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore')
     return text
 
 
 # Function for expanding contractions
 def expand_contractions(text):
-    print("Expanding contractions...")
 
     contractions_pattern = re.compile('({})'.format('|'.join(CONTRACTION_MAP.keys())),flags=re.IGNORECASE|re.DOTALL)
 
@@ -52,7 +52,6 @@ def expand_contractions(text):
 
 # Define function for removing special characters
 def remove_special_characters(text, remove_digits=True):
-    print("Removing special characters...")
     text.strip()
     pattern = r'[^a-zA-z0-9\s]' if not remove_digits else r'[^a-zA-z\s]'
     text = re.sub(pattern, '', text)
@@ -61,7 +60,6 @@ def remove_special_characters(text, remove_digits=True):
 
 # Define function for removing stopwords
 def remove_stopwords(text, is_lower_case=False):
-    print("Removing stopwords...")
     tokens = tokenizer.tokenize(text)
     tokens = [token.strip() for token in tokens]
 
@@ -76,7 +74,6 @@ def remove_stopwords(text, is_lower_case=False):
 
 # Define function for text lemmatization
 def lemmatize_text(text):
-    print("Lemmatizing the text...")
     text = nlp(text)
     text = ' '.join([word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
     return text
@@ -87,7 +84,6 @@ def normalize_corpus(corpus, contraction_expansion=True,
                      accented_char_removal=True, stopword_removal=True, text_lower_case=True,
                      text_lemmatization=True, special_char_removal=True,
                      remove_digits=True):
-    print("Normalizing and pre-processing the corpus...")
 
     normalized_corpus = []
     # Normalize each document in the corpus
@@ -135,6 +131,7 @@ def normalize_corpus(corpus, contraction_expansion=True,
 df['full_text'] = df['text'].map(str) + '. ' + df['title']
 
 # Pre-process text and store the same in a new column called "clean text"
+print("Normalizing corpus...")
 df['clean_text'] = normalize_corpus(df['full_text'])
 norm_corpus = list(df['clean_text'])
 
@@ -144,7 +141,6 @@ modeling_df = df.drop(['title', 'text', 'url', 'full_text'], axis=1)
 
 # Define function to directly compute the TF-IDF-based feature vectors for documents from the raw documents
 def tfidf_extractor(corpus, ngram_range=(1, 1)):
-    print("Computing the TF-IDF features...")
     vectorizer = TfidfVectorizer(min_df=1,
                                  norm='l2',
                                  smooth_idf=True,
@@ -165,6 +161,7 @@ train_corpus, test_corpus = train_X.values.astype('U'), test_X.values.astype('U'
 train_labels, test_labels = train_Y, test_Y
 
 # Build the TF-IDF features
+print("Constructing TF-IDF features...")
 feature_set = []
 tfidf_vectorizer, tfidf_train_features = tfidf_extractor(train_corpus)
 tfidf_test_features = tfidf_vectorizer.transform(test_corpus)
