@@ -3,11 +3,16 @@ import pickle
 import pandas as pd
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, precision_score, recall_score, f1_score, classification_report
 
+# Prepare the argument parser
+parser = argparse.ArgumentParser(description='Script for training a Random Forest classifier')
+parser.add_argument('test_file', type=str, help='Input TSV file with test data.')
+parser.add_argument('model', type=str, help='Input pickled model for scoring.')
+
 # Import the model
-rfc = pickle.loads("rfc.pickle")
+rfc = pickle.loads(parser.model)
 
 # Load the dataset for testing
-test_df = pd.read_csv("test_data.tsv", sep='\t')
+test_df = pd.read_csv(parser.test_file, sep='\t')
 
 # Split the dataset into features and labels
 y_test = test_df['test_labels']
