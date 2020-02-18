@@ -7,6 +7,7 @@ The solution contains multiple files, namely:
 
 * Upday_DS_Challenge-Srdjan_Santic.ipynb
 * requirements.txt
+* contractions.py
 * train.py
 * test.py
 * app.py
@@ -30,6 +31,12 @@ requirements.txt
 The project relies on a number of dependencies that need to first be installed. This can be done by way of pip:
 
 $ pip install -r requirements.txt
+
+
+contractions.py
+---------------
+
+This is a file created by Dipanjan Sarkar, used for expanding contractions (i.e. should've).
 
 
 train.py
