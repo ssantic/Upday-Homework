@@ -34,7 +34,7 @@ test_df = pd.read_csv(args.test_file, sep='\t')
 
 # Split the dataset into features and labels
 y_test = test_df['test_labels']
-X_test = test_df.drop('test_labels', axis=1)
+X_test = test_df.drop('test_labels', axis=1).values
 
 # Generate the predictions
 rfc_preds = rfc.predict(X_test)
