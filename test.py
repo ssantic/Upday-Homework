@@ -10,7 +10,7 @@ a number of accuracy metrics for the model.
 
 The correct usage of the script is:
 
-$ python test.py model_file.pickle test_data_file.tsv
+$ python test.py test_data_features.tsv test_data_labels.tsv model_file.pickle
 
 """
 

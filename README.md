@@ -59,7 +59,7 @@ and presents several accuracy metrics.
 
 It is run in the following way:
 
-$ python test.py test_dataset_file model_file
+$ python test.py test_dataset_features test_dataset_labels model_file
 
 
 app.py

@@ -8,8 +8,8 @@ This script is used to preprocess text data provided by upday, and to train
 a Random Forest classifier. It does a series of preprocessing and feature
 engineering steps, and trains a model.
 
-The script also outputs the model as a .pickle file, and also exports a .tsv
-file with the test data (features and labels) for evaluating the accuracy of
+The script also outputs the model as a .pickle file, and also exports two .tsv
+files with the test data (features and labels) for evaluating the accuracy of
 the model.
 
 The correct usage of the script is:
